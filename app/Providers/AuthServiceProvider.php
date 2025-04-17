@@ -2,10 +2,19 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use App\Models\Permission;
+use App\Models\StudentDocument;
+use App\Models\StudentEmergencyContact;
+use App\Models\StudentEducationalQualification;
+use App\Models\StudentPersonalInformation;
+use App\Models\StudentProgramChoice;
+use App\Policies\DocumentPolicy;
+use App\Policies\EducationalQualificationPolicy;
+use App\Policies\EmergencyContactPolicy;
+use App\Policies\PersonalInformationPolicy;
+use App\Policies\ProgramChoicePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Permission;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,7 +24,11 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        StudentPersonalInformation::class => PersonalInformationPolicy::class,
+        StudentEmergencyContact::class => EmergencyContactPolicy::class,
+        StudentEducationalQualification::class => EducationalQualificationPolicy::class,
+        StudentProgramChoice::class => ProgramChoicePolicy::class,
+        StudentDocument::class => DocumentPolicy::class,
     ];
 
     /**
@@ -27,13 +40,18 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        $permissions = Permission::with('roles')->get();
+        // Only register permission gates if the permissions table exists
+        try {
+            $permissions = Permission::with('roles')->get();
 
-        foreach ($permissions as $permission) {
-            Gate::define($permission->name, function ($user) use ($permission) {
-                // Check if the user has the permission via their roles
-                return $user->hasPermissionTo($permission->name);
-            });
+            foreach ($permissions as $permission) {
+                Gate::define($permission->name, function ($user) use ($permission) {
+                    return $user->hasPermissionTo($permission->name);
+                });
+            }
+        } catch (\Exception $e) {
+            // Log the error or handle it appropriately
+            Log::warning('Permissions table may not exist or is not accessible: ' . $e->getMessage());
         }
     }
 }

@@ -21,6 +21,8 @@ class User extends Authenticatable
      *
      * @var array
      */
+
+     protected $table = 'ieis-crm.users'; 
     
      
     protected $fillable = [
@@ -31,6 +33,8 @@ class User extends Authenticatable
        
     ];
 
+    protected $connection = 'mysql'; // This should use the connection defined in .env
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -38,6 +42,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
+        'remember_token',
     ];
 
     /**
@@ -47,36 +52,21 @@ class User extends Authenticatable
      */
     protected $casts = [
         'id' => 'integer',
-        'status_id' => 'integer',
-        'branch_id' => 'integer',
-        'warehouse_id' => 'integer',
-        'store_id' => 'integer'
+        
+        
     ];
 
-     public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class, 'role_user');
-    }
+   public function role(): BelongsTo
+{
+    return $this->belongsTo(Role::class);
+}
 
-    // public function status(): BelongsTo
-    // {
-    //     return $this->belongsTo(Status::class);
-    // }
+   
 
-    // public function branch(): BelongsTo
-    // {
-    //     return $this->belongsTo(Branch::class);
-    // }
-
-    // public function warehouse(): BelongsTo
-    // {
-    //     return $this->belongsTo(Warehouse::class);
-    // }
-
-    // public function store(): BelongsTo
-    // {
-    //     return $this->belongsTo(Store::class);
-    // }
+   public function roles()
+{
+    return collect([$this->role]);
+}
 
     public function hasPermissionTo($name)
     {
@@ -87,7 +77,14 @@ class User extends Authenticatable
         }
         return false;
     }
-//
+
+    public function hasRole($role)
+    {
+        if (is_string($role)) {
+            return $this->role->name === $role;
+        }
+        return $this->role->id === $role->id;
     }
+}
   
 
