@@ -56,35 +56,35 @@ class User extends Authenticatable
         
     ];
 
-//    public function role(): BelongsTo
-// {
-//     return $this->belongsTo(Role::class);
-// }
+   public function role(): BelongsTo
+{
+    return $this->belongsTo(Role::class);
+}
 
    
 
-//    public function roles()
-// {
-//     return collect([$this->role]);
-// }
+   public function roles()
+{
+    return collect([$this->role]);
+}
 
-//     public function hasPermissionTo($name)
-//     {
-//         foreach ($this->roles as $role) {
-//             if ($role->permissions->contains('name', $name)) {
-//                 return true;
-//             }
-//         }
-//         return false;
-//     }
+    public function hasPermissionTo($name)
+    {
+        foreach ($this->roles as $role) {
+            if ($role->permissions->contains('name', $name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-//     public function hasRole($role)
-//     {
-//         if (is_string($role)) {
-//             return $this->role->name === $role;
-//         }
-//         return $this->role->id === $role->id;
-//     }
+    public function hasRole($role)
+    {
+        if (is_string($role)) {
+            return $this->role->name === $role;
+        }
+        return $this->role->id === $role->id;
+    }
 }
   
 

@@ -21,18 +21,7 @@ class AuthController extends Controller
   {
 
 
-      dd([
-        'default_connection' => config('database.default'),
-        'connections' => config('database.connections'),
-        'current_db' => DB::connection()->getDatabaseName(),
-        'env_db' => env('DB_DATABASE')
-    ]);
-    // Log database connection info
-    Log::info('Database Connection Info:', [
-        'default' => config('database.default'),
-        'connections' => config('database.connections'),
-        'current_connection' => DB::connection()->getDatabaseName()
-    ]);
+
 
     $this->validate($request, [
       'name' => 'required|string|max:255',
