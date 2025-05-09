@@ -20,22 +20,31 @@ class EducationalQualificationController extends Controller
     }
 
     public function store(StoreEducationalQualificationRequest $request, StudentPersonalInformation $personalInformation)
-    {
-        $this->authorize('update', $personalInformation);
-        
-        // Check if qualification with this order already exists
-        $existing = $personalInformation->educationalQualifications()
-            ->where('qualification_order', $request->qualification_order)
+{
+    $this->authorize('update', $personalInformation);
+
+    $qualificationsData = $request->validated()['qualifications'];
+
+    $createdQualifications = [];
+
+    foreach ($qualificationsData as $data) {
+        // Check for existing qualification_order
+        $exists = $personalInformation->educationalQualifications()
+            ->where('qualification_order', $data['qualification_order'])
             ->first();
 
-        if ($existing) {
-            return response()->json(['message' => 'Qualification with this order already exists'], 400);
+        if ($exists) {
+            return response()->json([
+                'message' => "Qualification with order {$data['qualification_order']} already exists."
+            ], 400);
         }
 
-        $qualification = $personalInformation->educationalQualifications()->create($request->validated());
-
-        return new EducationalQualificationResource($qualification);
+        $createdQualifications[] = $personalInformation->educationalQualifications()->create($data);
     }
+
+    return EducationalQualificationResource::collection(collect($createdQualifications));
+}
+
 
     public function show(StudentEducationalQualification $educationalQualification)
     {

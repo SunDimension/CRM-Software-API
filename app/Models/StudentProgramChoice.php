@@ -14,8 +14,10 @@ class StudentProgramChoice extends Model
         'country_id',
         'university_id',
         'program_id',
-        'priority',
-        'is_completed'
+        'first_choice',
+        'second_choice',
+        'third_choice',
+        'is_completed',
     ];
 
     public function student()

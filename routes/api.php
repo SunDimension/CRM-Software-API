@@ -2,7 +2,10 @@
 
 
 use App\Http\Controllers\LevelOfStudyController;
+use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\SchoolController;
+use App\Http\Controllers\SocialMediaController;
+use App\Http\Controllers\UploadDocController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RolesController;
@@ -18,8 +21,7 @@ use App\Http\Controllers\GenderController;
 use App\Http\Controllers\MaritalStatusController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\YearController;
-use App\Http\Controllers\AboutUsController;
-
+use App\Http\Controllers\FileTypeController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -100,7 +102,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/years', action: [YearController::class, 'index'])->withoutMiddleware(['auth:sanctum', 'auth']);
     Route::get('/school', action: [SchoolController::class, 'index'])->withoutMiddleware(['auth:sanctum', 'auth']);
     Route::get('/level-of-study', action: [LevelOfStudyController::class, 'index'])->withoutMiddleware(['auth:sanctum', 'auth']);
-
+    Route::get('/social-media', action: [SocialMediaController::class, 'index'])->withoutMiddleware(['auth:sanctum', 'auth']);
+    Route::post('/social-media', [SocialMediaController::class, 'store'])
+    ->withoutMiddleware(['auth:sanctum', 'auth']);
+    Route::post('/file_type', [FileTypeController::class, 'store'])->withoutMiddleware(['auth:sanctum', 'auth']);
+    Route::get('/file_type', [FileTypeController::class, 'index'])->withoutMiddleware(['auth:sanctum', 'auth']);
+    Route::post('/upload-docs', [UploadDocController::class, 'store'])->withoutMiddleware(['auth:sanctum', 'auth']);
+    Route::get('/upload-docs', [UploadDocController::class, 'index'])->withoutMiddleware(['auth:sanctum', 'auth']);
     // Route::get('/view-file/{id}',  App\Http\Controllers\UploadDocController::class, 'viewFile');
 
     // Route::apiResource('years', App\Http\Controllers\YearController::class);
@@ -135,15 +143,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/program-choices/{programChoice}', [ProgramChoiceController::class, 'update']);
     Route::delete('/program-choices/{programChoice}', [ProgramChoiceController::class, 'destroy']);
     Route::post('/program-choices/{programChoice}/complete', [ProgramChoiceController::class, 'markAsComplete']);
-    // About Us Routes (nested under personal information)
+
     Route::get('/personal-information/{personalInformation}/about-us', [AboutUsController::class, 'index']);
     Route::post('/personal-information/{personalInformation}/about-us', [AboutUsController::class, 'store']);
-
     Route::get('/about-us/{aboutUs}', [AboutUsController::class, 'show']);
     Route::put('/about-us/{aboutUs}', [AboutUsController::class, 'update']);
     Route::delete('/about-us/{aboutUs}', [AboutUsController::class, 'destroy']);
     Route::post('/about-us/{aboutUs}/complete', [AboutUsController::class, 'markAsComplete']);
-
+    
     // Document Routes (nested under personal information)
     Route::get('/personal-information/{personalInformation}/documents', [DocumentController::class, 'index']);
     Route::post('/personal-information/{personalInformation}/documents', [DocumentController::class, 'store']);

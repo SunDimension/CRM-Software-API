@@ -12,23 +12,10 @@ class UploadDoc extends Model
 
     protected $fillable = [
         'file_title',
-        'file_description',
-        'subfolder_id',
         'filetype_id',
         'attach_file',
-        'file_expiry_date',
-        'financial_value',
-        'approval_comment',
-        'status',
-        'approval_date',
-        'approval_date',
-        'approved_by',
     ];
 
-  public function subfolder()
-    {
-        return $this->belongsTo(Subfolder::class, 'subfolder_id');
-    }
 
   public function fileType()
 {

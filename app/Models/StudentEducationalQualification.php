@@ -13,13 +13,27 @@ class StudentEducationalQualification extends Model
         'student_id',
         'qualification_name',
         'country_id',
-        'qualification_obtained',
+        'qualification_obtained_id',
         'grade',
         'institution_name',
         'year_started_id',
+        'year_finished_id',
         'qualification_order',
         'is_completed'
     ];
+
+    // Cast 'is_completed' to boolean
+    protected $casts = [
+        'is_completed' => 'boolean',
+    ];
+
+    // Optional global scope to always order by qualification_order
+    protected static function booted()
+    {
+        static::addGlobalScope('ordered', function ($query) {
+            $query->orderBy('qualification_order');
+        });
+    }
 
     public function student()
     {

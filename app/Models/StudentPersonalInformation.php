@@ -49,7 +49,10 @@ class StudentPersonalInformation extends Model
     {
         return $this->hasMany(StudentProgramChoice::class, 'student_id');
     }
-
+    public function aboutUs()
+    {
+        return $this->hasMany(AboutUs::class, 'student_id');
+    }
     public function documents()
     {
         return $this->hasMany(StudentDocument::class, 'student_id');

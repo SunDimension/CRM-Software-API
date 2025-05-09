@@ -13,33 +13,23 @@ class UploadDocResource extends JsonResource
         return [
             'id' => $this->id,
             'file_title' => $this->file_title,
-            'file_description' => $this->file_description,
-            'financial_value' => $this->financial_value,
-            'file_expiry_date' => $this->file_expiry_date,
             'created_at' => $this->created_at ? $this->created_at->format('Y-m-d H:i:s') : null, // Format the date
+            'updated_at' => $this->updated_at ? $this->updated_at->format('Y-m-d H:i:s') : null, // Format the date
+            'is_completed' => $this->is_completed,
 
-            'sub_folder' => $this->whenLoaded('subfolder', function () {
+            'application_id' => $this->whenLoaded('application', function () {
                 return [
-                    'id' => $this->subfolder_id,
-                    'name' => optional($this->subfolder)->name,
+                    'id' => $this->application->id,
+                    'name' => $this->application->name,
+                    'surname' => $this->application->surname,
+                    'email' => $this->application->email,
+                    'phone_number' => $this->application->phone_number,
                 ];
             }),
 
-            'primary_folder' => $this->whenLoaded('subfolder', function () {
-                return $this->subfolder->primaryFolder ? [
-                    'id' => $this->subfolder->primaryFolder->id,
-                    'name' => $this->subfolder->primaryFolder->name,
-                ] : null;
-            }),
+      
 
-            'company' => $this->whenLoaded('subfolder', function () {
-                return $this->subfolder->primaryFolder && $this->subfolder->primaryFolder->company ? [
-                    'id' => $this->subfolder->primaryFolder->company->id,
-                    'name' => $this->subfolder->primaryFolder->company->name,
-                ] : null;
-            }),
-
-            'file_type' => $this->whenLoaded('fileType', function () {
+            'filetype_id' => $this->whenLoaded('fileType', function () {
                 return [
                     'id' => $this->fileType->id ?? null,
                     'name' => optional($this->fileType)->name,

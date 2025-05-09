@@ -20,12 +20,9 @@ class UploadDocUpdateRequest extends FormRequest
 public function rules(): array
 {
     return [
-        'subfolder_id' => ['required', 'integer', 'exists:subfolders,id'], // Changed from sub_folder
+       
         'filetype_id' => ['required', 'integer', 'exists:filetypes,id'], // Changed from file_type
         'file_title' => ['nullable', 'string'],
-        'file_description' => ['nullable', 'string'],
-        'financial_value' => ['nullable', 'numeric'],
-        'file_expiry_date' => ['nullable', 'date'],
         'attach_file' => ['sometimes', 'file', 'mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg', 'max:10240'], // Changed from required to sometimes
     ];
 }
