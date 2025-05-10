@@ -14,23 +14,20 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable 
 {
-    use HasFactory, HasApiTokens,HasRoles ;
+    use HasFactory, HasApiTokens, HasRoles;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
-
-     protected $table = 'ieis-crm.users'; 
+    protected $table = 'ieis-crm.users'; 
     
-     
     protected $fillable = [
         'name',
         'email',
         'password',
         'role_id'
-       
     ];
 
     protected $connection = 'mysql'; // This should use the connection defined in .env
@@ -52,22 +49,24 @@ class User extends Authenticatable
      */
     protected $casts = [
         'id' => 'integer',
-        
-        
     ];
 
-   public function role(): BelongsTo
-{
-    return $this->belongsTo(Role::class);
-}
+    // This can stay if you're using a single-role-per-user approach via `role_id`
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
 
-   
+    // ❌ Commented out: This overrides Spatie's roles() relationship and causes the error
+    /*
+    public function roles()
+    {
+        return collect([$this->role]);
+    }
+    */
 
-   public function roles()
-{
-    return collect([$this->role]);
-}
-
+    // ❌ This method manually checks permissions by looping through custom roles; Spatie already provides hasPermissionTo()
+    /*
     public function hasPermissionTo($name)
     {
         foreach ($this->roles as $role) {
@@ -77,7 +76,10 @@ class User extends Authenticatable
         }
         return false;
     }
+    */
 
+    // ❌ This custom hasRole() is not needed; Spatie provides this method too
+    /*
     public function hasRole($role)
     {
         if (is_string($role)) {
@@ -85,6 +87,5 @@ class User extends Authenticatable
         }
         return $this->role->id === $role->id;
     }
+    */
 }
-  
-

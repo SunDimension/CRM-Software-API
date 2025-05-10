@@ -78,7 +78,7 @@ private function handleFileUpload(Request $request): JsonResponse|FileResource
     }
 
     try {
-        $path = $request->file('file')->store('uploads', 'public');
+        $path = $request->file('file')->store('', 'public');
         $file = File::create(['path' => $path]);
 
         return new FileResource($file);
